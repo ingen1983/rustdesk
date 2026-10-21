@@ -1159,7 +1159,14 @@ fn get_api_server_(api: String, custom: String) -> String {
             return format!("http://{}", s);
         }
     }
-    "https://admin.rustdesk.com".to_owned()
+    // --- BRANDING -----------------------------------------------------------
+    // Свой сервер по умолчанию вместо официального.
+    // Без этой правки клиент уходил за аккаунтом и списком OIDC-провайдеров на
+    // admin.rustdesk.com: в логе это выглядело как
+    //   "https://admin.rustdesk.com/api/login-options" (TimedOut),
+    // а в диалоге входа появлялись кнопки Google / GitHub / Microsoft
+    // с client_id официального RustDesk.
+    config::BRANDING_API_SERVER.to_owned()
 }
 
 #[inline]

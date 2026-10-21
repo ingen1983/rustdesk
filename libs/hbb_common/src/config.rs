@@ -127,6 +127,9 @@ pub const BRANDING_APP_NAME: &str = "JTEK-Remote";
 // без ручного ввода и без --config.
 pub const RENDEZVOUS_SERVERS: &[&str] = &["185.26.121.69"];
 pub const RS_PUB_KEY: &str = "SD3cJ87vqghU5sYzb4PzfHtsXRv0pO0QYrt11jctQZM=";
+// API-сервер (веб-консоль и аккаунты). Без него клиент обращается к
+// admin.rustdesk.com и показывает вход через Google / GitHub / Microsoft.
+pub const BRANDING_API_SERVER: &str = "http://185.26.121.69:21114";
 
 pub const RENDEZVOUS_PORT: i32 = 21116;
 pub const RELAY_PORT: i32 = 21117;

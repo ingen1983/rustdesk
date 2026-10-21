@@ -750,7 +750,17 @@ Future<bool?> _openLoginDialog() async {
     }
   }
 
-  Future.delayed(Duration.zero, fetchLoginOptions);
+  // --- BRANDING: вход только по логину и паролю -------------------------------
+  // Кнопки входа через сторонние сервисы (Google / GitHub / Microsoft и др.)
+  // отключены: клиент обращается к серверу за списком OIDC-провайдеров, и если
+  // ответ пустой или сервер недоступен, в диалоге появляются лишние кнопки
+  // (а при недоступности — ошибка таймаута).
+  // Свой сервер список провайдеров не отдаёт, поэтому запрос не нужен вовсе:
+  // это убирает и кнопки, и сетевую задержку при открытии окна входа.
+  //
+  // Чтобы вернуть кнопки, достаточно раскомментировать строку ниже.
+  // fetchLoginOptions();
+  // Future.delayed(Duration.zero, fetchLoginOptions);
 
   final res = await gFFI.dialogManager.show<bool>((setState, close, context) {
     username.addListener(() {
