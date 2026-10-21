@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hbb/branding.dart';
 import 'package:flutter_hbb/common.dart';
 import 'package:flutter_hbb/common/widgets/animated_rotation_widget.dart';
 import 'package:flutter_hbb/common/widgets/custom_password.dart';
@@ -128,9 +129,20 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     final textColor = Theme.of(context).textTheme.titleLarge?.color;
     return ChangeNotifierProvider.value(
       value: gFFI.serverModel,
-      child: Container(
+      child: ValueListenableBuilder<bool>(
+        valueListenable: brandingBackgroundReady,
+        builder: (context, hasBg, _) => Container(
         width: isIncomingOnly ? 280.0 : 200.0,
-        color: Theme.of(context).colorScheme.background,
+        // --- BRANDING -------------------------------------------------------
+        // Панель делаем полупрозрачной ТОЛЬКО если фоновый рисунок реально
+        // найден. Иначе возвращаем ровно исходный цвет темы — тогда вид
+        // гарантированно совпадает со стоковым RustDesk.
+        color: hasBg
+            ? Theme.of(context)
+                .colorScheme
+                .background
+                .withOpacity(kBrandingPanelOpacity)
+            : Theme.of(context).colorScheme.background,
         child: Stack(
           children: [
             Column(
@@ -175,13 +187,25 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           ],
         ),
       ),
+      ),
     );
   }
 
   buildRightPane(BuildContext context) {
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: ConnectionPage(),
+    return ValueListenableBuilder<bool>(
+      valueListenable: brandingBackgroundReady,
+      builder: (context, hasBg, _) => Container(
+        // --- BRANDING -------------------------------------------------------
+        // Как и левая панель: прозрачность только при наличии фонового рисунка,
+        // иначе — исходный цвет, чтобы вид не отличался от стокового RustDesk.
+        color: hasBg
+            ? Theme.of(context)
+                .colorScheme
+                .background
+                .withOpacity(kBrandingPanelOpacity)
+            : Theme.of(context).colorScheme.background,
+        child: ConnectionPage(),
+      ),
     );
   }
 
