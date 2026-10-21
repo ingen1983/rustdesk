@@ -73,10 +73,16 @@ class DesktopSettingPage extends StatefulWidget {
       SettingsTabKey.network,
     if (!bind.isIncomingOnly()) SettingsTabKey.display,
     if (!bind.isDisableAccount()) SettingsTabKey.account,
-    if (isWindows &&
-        !bind.isDisableSettings() &&
-        bind.mainGetBuildinOption(key: kOptionHideRemotePrinterSetting) != 'Y')
-      SettingsTabKey.printer,
+    // --- BRANDING: вкладка "Принтер" убрана ---------------------------------
+    // Удалённый принтер не используется, поэтому настройку скрываем.
+    // Класс _Printer и значение SettingsTabKey.printer оставлены в коде:
+    // они больше не попадают в список вкладок, но правка минимальна и её
+    // легко откатить (достаточно вернуть блок ниже).
+    //
+    // if (isWindows &&
+    //     !bind.isDisableSettings() &&
+    //     bind.mainGetBuildinOption(key: kOptionHideRemotePrinterSetting) != 'Y')
+    //   SettingsTabKey.printer,
     SettingsTabKey.about,
   ];
 
@@ -1188,10 +1194,14 @@ class _SafetyState extends State<_Safety> with AutomaticKeepAliveClientMixin {
             _OptionCheckBox(
                 context, 'Enable keyboard/mouse', kOptionEnableKeyboard,
                 enabled: enabled, fakeValue: fakeValue),
-            if (isWindows)
-              _OptionCheckBox(
-                  context, 'Enable remote printer', kOptionEnableRemotePrinter,
-                  enabled: enabled, fakeValue: fakeValue),
+            // --- BRANDING: удалённый принтер убран ---------------------------
+            // Разрешение "Enable remote printer" скрыто вместе с одноимённой
+            // вкладкой настроек. Чтобы вернуть — раскомментировать блок.
+            //
+            // if (isWindows)
+            //   _OptionCheckBox(
+            //       context, 'Enable remote printer', kOptionEnableRemotePrinter,
+            //       enabled: enabled, fakeValue: fakeValue),
             _OptionCheckBox(context, 'Enable clipboard', kOptionEnableClipboard,
                 enabled: enabled, fakeValue: fakeValue),
             _OptionCheckBox(
